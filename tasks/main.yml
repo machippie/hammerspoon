@@ -24,7 +24,7 @@
       register: hammerspoon_quarantine
       failed_when: hammerspoon_quarantine.rc != 0 and "No such xattr" not in hammerspoon_quarantine.stderr
       changed_when: hammerspoon_quarantine.rc == 0
-      command: xattr -d com.apple.quarantine /Applications/hammerspoon.app
+      command: xattr -d com.apple.quarantine /Applications/Hammerspoon.app
       tags:
         - hammerspoon
 
@@ -39,7 +39,7 @@
       check_mode: False
       failed_when: False
       changed_when: hammerspoon_running.stdout | length > 0 | bool
-      command: pidof hammerspoon
+      command: pidof Hammerspoon
       tags:
         - hammerspoon
 
