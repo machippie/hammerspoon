@@ -1,0 +1,10 @@
+# Standards: 0.1
+---
+# @var hammerspoon_user:description: User to run user-specific commands
+# @var hammerspoon_user:value: hammerspoon_user | default(homebrew_user) | default(ansible_user_id)
+# hammerspoon_user:
+
+# @var hammerspoon_started:description: Start in background after install
+hammerspoon_started: True
+
+...

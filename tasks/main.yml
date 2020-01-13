@@ -1,0 +1,52 @@
+# Standards: 0.1
+---
+- name: Fact hammerspoon user
+  set_fact:
+    hammerspoon_user: "{{ hammerspoon_user | default(homebrew_user) | default(ansible_user_id) }}"
+  tags:
+    - hammerspoon
+
+- become: "{{ (hammerspoon_user != ansible_user_id) | bool }}"
+  become_user: "{{ hammerspoon_user }}"
+  block:
+    - name: Install required package
+      ignore_errors: True
+      homebrew_cask:
+        name: hammerspoon
+        greedy: True
+        options: appdir=/Applications
+        accept_external_apps: False
+        state: upgraded
+      tags:
+        - hammerspoon
+
+    - name: Remove quarantine flag
+      register: hammerspoon_quarantine
+      failed_when: hammerspoon_quarantine.rc != 0 and "No such xattr" not in hammerspoon_quarantine.stderr
+      changed_when: hammerspoon_quarantine.rc == 0
+      command: xattr -d com.apple.quarantine /Applications/hammerspoon.app
+      tags:
+        - hammerspoon
+
+    - name: Install pidof package
+      homebrew:
+        name: pidof
+      tags:
+        - hammerspoon
+
+    - name: Check program running
+      register: hammerspoon_running
+      check_mode: False
+      failed_when: False
+      changed_when: hammerspoon_running.stdout | length > 0 | bool
+      command: pidof hammerspoon
+      tags:
+        - hammerspoon
+
+    - name: Fact program running
+      set_fact:
+        hammerspoon_started: "{{ hammerspoon_running.stdout_lines | length > 0 | bool }}"
+      tags:
+        - hammerspoon
+
+...

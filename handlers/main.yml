@@ -1,0 +1,16 @@
+# Standards: 0.1
+---
+- name: Kill hammerspoon
+  command: killall hammerspoon
+  register: hammerspoon_kill
+  failed_when: hammerspoon_kill.rc != 0 and "No matching processes belonging to you were found" not in hammerspoon_kill.stderr
+  become: "{{ (hammerspoon_user != ansible_user_id) | bool }}"
+  become_user: "{{ hammerspoon_user }}"
+
+- name: Start hammerspoon
+  when: hammerspoon_started
+  command: open -g /Applications/hammerspoon.app
+  become: "{{ (hammerspoon_user != ansible_user_id) | bool }}"
+  become_user: "{{ hammerspoon_user }}"
+
+...
