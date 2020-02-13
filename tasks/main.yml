@@ -39,7 +39,7 @@
       check_mode: False
       failed_when: False
       changed_when: hammerspoon_running.stdout | length > 0 | bool
-      command: pidof Hammerspoon
+      command: /usr/local/bin/pidof Hammerspoon
       tags:
         - hammerspoon
 
