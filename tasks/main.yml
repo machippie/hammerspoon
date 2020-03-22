@@ -20,33 +20,12 @@
       tags:
         - hammerspoon
 
-    - name: Remove quarantine flag
-      register: hammerspoon_quarantine
-      failed_when: hammerspoon_quarantine.rc != 0 and "No such xattr" not in hammerspoon_quarantine.stderr
-      changed_when: hammerspoon_quarantine.rc == 0
-      command: xattr -d com.apple.quarantine /Applications/Hammerspoon.app
-      tags:
-        - hammerspoon
-
-    - name: Install pidof package
-      homebrew:
-        name: pidof
-      tags:
-        - hammerspoon
-
-    - name: Check program running
-      register: hammerspoon_running
-      check_mode: False
-      failed_when: False
-      changed_when: hammerspoon_running.stdout | length > 0 | bool
-      command: /usr/local/bin/pidof Hammerspoon
-      tags:
-        - hammerspoon
-
-    - name: Fact program running
-      set_fact:
-        hammerspoon_started: "{{ hammerspoon_running.stdout_lines | length > 0 | bool }}"
-      tags:
-        - hammerspoon
+- name: Remove quarantine flag
+  register: hammerspoon_quarantine
+  failed_when: hammerspoon_quarantine.rc != 0 and "No such xattr" not in hammerspoon_quarantine.stderr
+  changed_when: hammerspoon_quarantine.rc == 0
+  command: xattr -d com.apple.quarantine /Applications/Hammerspoon.app
+  tags:
+    - hammerspoon
 
 ...
